@@ -634,7 +634,7 @@ contexts:
         - match: '\}'
           scope: meta.enum.c meta.block.c punctuation.section.block.end.c
           pop: true
-        - include: data-structures-body
+        - include: data-structures-body-enum
 
   data-structures-union-definition:
     - meta_scope: meta.union.c
@@ -686,6 +686,14 @@ contexts:
     - match: '(?={{before_tag}})'
       push: data-structures
     - include: expressions
+    
+  data-structures-body-enum:
+    - include: preprocessor-data-structures
+    - match: '(?={{before_tag}})'
+      push: data-structures
+    - match: '{{identifier}}'
+      scope: entity.name.enum.constants
+    - include: expressions    
 
   block:
     - match: '\{'
@@ -790,8 +798,12 @@ contexts:
           captures:
             1: entity.name.type.typedef.c
           pop: true
-        - match: '(?=\b({{before_tag}})\b)'
-          push: data-structures
+        - match: \b(struct)\s+({{identifier}})
+          captures:
+            1: keyword.declaration.type.c
+        - match: '\benum\b'
+          scope: keyword.declaration.type.c
+          set: data-structures-enum-definition
         - include: expressions
 
   function-call:

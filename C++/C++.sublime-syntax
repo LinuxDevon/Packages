@@ -332,6 +332,13 @@ contexts:
     - include: preprocessor-statements
     - include: scope:source.c#label
     - include: expressions
+    
+  statements-enum:
+    - include: preprocessor-statements
+    - include: scope:source.c#label
+    - match: '{{identifier}}'
+      scope: entity.name.enum.c++.constants
+    - include: expressions    
 
   expressions:
     - include: early-expressions
@@ -961,8 +968,12 @@ contexts:
           captures:
             1: entity.name.type.typedef.c++
           pop: true
-        - match: '(?=\b({{before_tag}})\b)'
-          push: data-structures
+        - match: \b(struct)\s+({{identifier}})\b
+          captures:
+            1: keyword.declaration.type.c++
+        - match: \benum\b
+          scope: keyword.declaration.type.c++
+          set: data-structures-enum-definition
         - include: expressions-minus-generic-type
 
   parens:
@@ -1382,7 +1393,7 @@ contexts:
         - match: '\}'
           scope: meta.enum.c++ meta.block.c++ punctuation.section.block.end.c++
           pop: true
-        - include: statements
+        - include: statements-enum
 
   data-structures-union-definition:
     - meta_scope: meta.union.c++
