@@ -800,9 +800,9 @@ contexts:
           pop: true
         - match: \b(struct)\s+({{identifier}})
           captures:
-            1: keyword.declaration.type.c
+            1: storage.type.c
         - match: '\benum\b'
-          scope: keyword.declaration.type.c
+          scope: storage.type.c
           set: data-structures-enum-definition
         - include: expressions
 
